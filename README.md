@@ -1,9 +1,6 @@
  # Laporan Proyek Machine Learning - Abriyan Yusuf
 
 ## Domain Proyek
-
-Pada bagian ini, kamu perlu menuliskan latar belakang yang relevan dengan proyek yang diangkat.
-
 Mobil tua merupakan salah satu alternatif sebagian orang yang ingin memiliki kendaraan dengan biaya yang terbatas. Hal tersebut menjadikannya sebagai kendaraan yang banyak dicari oleh sebagian orang tak terkecuali pengusaha jual beli mobil. Untuk meraih keuntungan yang baik pengusaha mobil tua memerlukan suatu cara untuk menilai harga dari setiap mobil tua yang ingin dibelinya dan dijual kembali. Ketika seorang pengusaha mampu mengetahui perkiraan harga mobil tua secara akurat maka ia dapat melakukan tawar menawar sedemikian rupa dengan penjual mobil tua sehingga pengusaha tersebut dapat mendapatkan keuntungan ketika menjualnya kembali ke konsumen.
 
 
@@ -14,25 +11,52 @@ Berdasarkan kondisi yang telah diuraikan sebelumnya, perusahaan akan mengembangk
 - Berapa harga pasar mobil tua dengan karakteristik atau fitur tertentu?
 
 ### 1.2 Goals
-Untuk menjawab pertanyaan tersebut, kita akan membuat predictive modelling dengan tujuan atau goals sebagai berikut :
+Untuk menjawab pertanyaan tersebut, akan dibuat predictive modelling dengan tujuan atau goals sebagai berikut :
 - Mengetahui fitur yang paling berkorelasi dengan harga mobil tua
 - Membuat model machine learning yang dapat memprediksi harga mobil tua seakurat mungkin berdasarkan fitur-fitur yang ada
 
 #### 1.3 Metodologi
-Prediksi harga adalah tujuan yang ingin kita capai. Harga merupakan variabel kontinu. Dalam predictive analytics, ketika membuat prediksi variabel kontinu maka kita sedang menyelesaikan **permasalahan regresi**. Oleh karena itu metodologi dalam proyek ini adalah membangun model regresi dengan harga mobil tua sebagai target.
+Prediksi harga adalah tujuan yang ingin dicapai. Harga merupakan variabel kontinu. Dalam predictive analytics, ketika membuat prediksi variabel kontinu maka permasalahan yang sedang diselesaikan adalah **permasalahan regresi**. Oleh karena itu, metodologi dalam proyek ini adalah membangun model regresi dengan harga mobil tua sebagai target.
 
 
 #### 1.4 Metrik
-Metrik digunakan untuk mengevaluasi seberapa baik model yang kita buat dalam memoprediksi harga. Untuk kasus regresi, beberapa metrik yang umum dan bisa digunakan diantaranya:
+Metrik digunakan untuk mengevaluasi seberapa baik model yang dibuat dalam memoprediksi harga. Untuk kasus regresi, beberapa metrik yang umum dan bisa digunakan diantaranya:
 - Mean Squared Error (MSE), atau
 - Root Mean Square Error (RMSE)
-Secara umum kedua metrik tersebut mengukur seberapa jauh hasil prediksi dengan nilai sebenarnya. 
+Secara umum kedua metrik tersebut mengukur seberapa jauh hasil prediksi dengan nilai sebenarnya. Perbedaan utama antara keduanya adalah bahwa RMSE adalah akar kuadrat dari MSE.
 
-Pengembangan model juga akan menggunakan beberapa algoritma machine learning diantaranya
+**Rumus Mean Squared Error (MSE)**
+
+$$
+\text{MSE} = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2
+$$
+
+
+dimana:
+
+* $n$ adalah jumlah titik data
+* $ y_i $ adalah nilai aktual dari titik data ke-i
+* $\hat{y}_i$ adalah nilai prediksi dari titik data ke-i
+
+**Rumus Root Mean Squared Error (RMSE)**
+
+$$
+\text{RMSE} = \sqrt{\text{MSE}}
+$$
+
+Pada proyek ini, metrik yang dipilih adalah MSE dimana MSE memiliki keunggulan dibanding RMSE sebagia berikut:
+
+1. **Interpretasi yang lebih mudah** : MSE memiliki interpretasi yang lebih langsung karena menggunakan satuan yang sama dengan variabel target. Ini membuatnya lebih mudah dipahami dan dijelaskan kepada orang lain.
+
+2. **Perhitungan yang lebih sederhana**: MSE tidak melibatkan perhitungan akar kuadrat, yang dapat meningkatkan efisiensi perhitungan, terutama jika bekerja dengan jumlah data yang besar.
+
+3. **Robust terhadap perubahan data**: Ketika outlier dihapus, RMSE akan menjadi sangat sensitif terhadap perubahan dalam data karena akar kuadrat akan menghasilkan fluktuasi yang besar. MSE lebih tahan terhadap fluktuasi ini.
+
+Pada tahap pengembangan model, digunakan beberapa algoritma machine learning diantaranya
 - K-Nearest Neighbor
 - Random Forest
 - Boosting Algorithm
-Dari ketiga model tersebut akan dipilih satu model yang memiliki **nilai kesalahan prediksi terkecil**. Dengan kata lain kita akan membuat model seakurat mungkin yang model dengan kesalahan sekecil mungkin.
+Dari ketiga model tersebut akan dipilih satu model yang memiliki **nilai kesalahan prediksi terkecil**. Dengan kata lain, pada proyek ini akan dipilih model mana yang dapat memberikan prediksi dengan seakurat mungkin.
 
 
 ## 2. Data Understanding
@@ -51,10 +75,10 @@ Data yang digunakan dalam proyek ini adalah dataset yang bersumber dari kaggle b
 8. `engine` yang berisi data kapasitas mesin kendaraan dalam cc
 9. `Seats` yang berisi data kapasitas tempat duduk dalam kendaraan dimulai dari 2 Seats - 8 Seats
 
-Untuk memahami data dilakukan dengan menggunakan teknik Exploratory Data Analysis (EDA).Sebelum melakukan proses EDA, terlebih dahulu dilakukan proses berupa Data Loading dan Data Cleaning. 
+Untuk memahami data, digunakan teknik Exploratory Data Analysis (EDA).Sebelum melakukan proses EDA, terlebih dahulu dilakukan proses berupa Data Loading dan Data Cleaning. 
 
 ### 2.2 Data Loading
-Data loading dilakukan untuk mengunduh data dari kaggle dengan cara mengunggah kredensial akun kaggle berupa file kaggle.json ke dalam direktori proyek. Kemudian, dilakukan serangkaian proses untuk mengkonfigurasi kresensial kaggle yang telah diupload. Langkah selanjutnya adalah mengunduh dataset melalui perintah `!kaggle datasets download milanvaddoriya/old-car-price-prediction` dan dilanjutkan dengan melakukan unzip dataset yang telah didownload.
+Data loading dilakukan untuk mengunduh data dari kaggle dengan cara mengunggah kredensial akun kaggle berupa file kaggle.json ke dalam direktori proyek. Kemudian, dilakukan serangkaian proses untuk mengkonfigurasi kredensial kaggle yang telah diupload. Langkah selanjutnya adalah mengunduh dataset melalui perintah `!kaggle datasets download milanvaddoriya/old-car-price-prediction` dan dilanjutkan dengan melakukan unzip dataset yang telah didownload.
 
 ### 2.3 Data Cleaning
 Pada proses Data Cleaning dilakukan proses pembersihan data dengan menghilangkan beberapa atribut dalam tiap-tiap entri data. Detail dari proses pembersihan data adalah sebagai berikut :
@@ -72,12 +96,12 @@ Pada proses Data Cleaning dilakukan proses pembersihan data dengan menghilangkan
 12. Memeriksa tipe data masing-masing fitur dan mengonversinya ke tipe data yang sesuai untuk proses EDA.
 
 ### 2.4 Exploratory Data Analysis
-Dalam tahapan ini akan dilakukan analisis data yang sudah dibersihkan meliputi:
+Dalam tahapan ini, dilakukan analisis data yang sudah dibersihkan meliputi:
 #### 2.4.1. Deskripsi variabel
 Tahapan ini dilakukan untuk mengetahui informasi variabel dari dataset diantaranya jumlah kolom, jumlah data, nama kolom, jumlah data per kolom, dan tipe data.
 
 #### 2.4.2. Deskripsi Statistik
-Tahapan ini dilakukan untuk mengetahui deskripsi statistik dari dataset. Dimana pada tahapan ini kita akan mendapatkan deskripsi statistik meliputi :
+Tahapan ini dilakukan untuk mengetahui deskripsi statistik dari dataset. Dimana pada tahapan ini akan didapatkan deskripsi statistik meliputi :
 1. Count : Jumlah sampel data
 2. Mean : Nilai rerata
 3. STD : Standar Deviasi
@@ -87,78 +111,84 @@ Tahapan ini dilakukan untuk mengetahui deskripsi statistik dari dataset. Dimana 
 7. 75% : Kuartil atas / Q3
 8. Max : Nilai Maksimum
 
-Berdasarkan deskripsi statistik dari dataset, kita dapat mengetahui apakah terdapat missing value atau tidak dengan melihat apakah terdapat nilai minimum yang bernilai nol. 
+Berdasarkan deskripsi statistik dari dataset, dapat diketahui apakah terdapat *missing value* atau tidak dengan melihat apakah terdapat nilai minimum yang bernilai nol. 
 
 #### 2.4.3. Menangani Missing Value
-Dalam tahapan ini, akan dilakukan dropping pada setiap data yang memiliki missing value.
+Dalam tahapan ini, dilakukan dropping pada setiap data yang memiliki *missing value*.
 
 #### 2.4.4. Menangani Outliers
-Dalam tahapan ini akan dilakukan pengecekkan outliers menggunakan teknik visualisasi data dengan boxplot. Apabila terdapat outliers, maka akan ditangani dengan menggunakan teknik Inter Quartile Range (IQR).Seltman dalam “Experimental Design and Analysis” [24] menyatakan bahwa outliers yang diidentifikasi oleh boxplot (disebut juga “boxplot outliers”) didefinisikan sebagai data yang nilainya 1.5 QR di atas Q3 atau 1.5 QR di bawah Q1.
+Dalam tahapan ini dilakukan pengecekkan *outliers* menggunakan teknik visualisasi data dengan boxplot. Apabila terdapat outliers, maka akan ditangani dengan menggunakan teknik Inter Quartile Range (IQR).Seltman dalam “Experimental Design and Analysis” [1] menyatakan bahwa outliers yang diidentifikasi oleh boxplot (disebut juga “boxplot outliers”) didefinisikan sebagai data yang nilainya 1.5 QR di atas Q3 atau 1.5 QR di bawah Q1.
 
-Berdasarkan teori tersebut, kita dapat membuat batas atas dan batas bawah dari data:
+Berdasarkan teori tersebut, dapat dibuat batas atas dan batas bawah dari data:
 
-- Batas bawah = Q1 - 1.5 * IQR
-- Batas atas = Q3 + 1.5 * IQR
+$$
+\text{Batas Bawah} = {Q1-1.5*\text{IQR}}
+$$
+
+$$
+\text{Batas Atas} = {Q1+1.5*\text{IQR}}
+$$
+
 
 #### 2.4.5. Melakukan Univariate Analysis
-Univariate Analysis dalam Exploratory Data Analysis (EDA) merujuk pada jenis analisis yang dilakukan terhadap satu variabel atau fitur tunggal dalam dataset, tanpa mempertimbangkan hubungannya dengan variabel lain.Dalam tahapan ini akan dilakukan visualisasi menggunakan histogram dari masing-masing fitur yaitu `categorical_features` dan `numerical_features`.
+Univariate Analysis dalam Exploratory Data Analysis (EDA) merujuk pada jenis analisis yang dilakukan terhadap satu variabel atau fitur tunggal dalam dataset, tanpa mempertimbangkan hubungannya dengan variabel lain. Dalam tahapan ini dilakukan visualisasi menggunakan histogram dari masing-masing fitur yaitu `categorical_features` dan `numerical_features`.
 
 #### 2.4.6. Melakukan Multivariate Analysis
 Multivariate Analysis dalam Exploratory Data Analysis (EDA) adalah jenis analisis yang dilakukan terhadap dua atau lebih variabel dalam dataset, dengan tujuan untuk memahami hubungan, interaksi, dan pola kompleks antara variabel-variabel tersebut. 
 
 Pada `categorical_features`, analisis dilakukan dengan membuat grafik rata-rata `price` relatif terhadap masing-masing fitur kategori.
 
-Sedangkan, pada `numerical_features`, analisis dilakukan dengan menggunakan fungsi `pairplot()` untuk melakukan observasi secara visual dan dilanjutkan menggunakan fungsi `corr()` untuk mengetahui skor korelasinya.
+Kemudian, pada `numerical_features`, analisis dilakukan dengan menggunakan fungsi `pairplot()` untuk melakukan observasi secara visual dan dilanjutkan menggunakan fungsi `corr()` untuk mengetahui skor korelasinya.
 
 
 ## 3. Data Preparation
-Pada tahapan ini kita akan melakukan proses transformasi pada data sehingga menjadi bentuk yang cocok untuk proses pemodelan. Terdapat 4 tahapan umum dalam Data Preparation diantaranya :
+Pada tahapan ini dilakukan proses transformasi pada data sehingga menjadi bentuk yang cocok untuk proses pemodelan. Terdapat 4 tahapan dalam Data Preparation diantaranya :
 1. Encoding Fitur Kategori
 2. Reduksi dimensi dengan PCA
 3. Pembagian dataset dengan fungsi train_test_split dari library `sklearn`
 4. Standardisasi
 
 ### 3.1 Encoding Fitur Kategori
-Untuk melakukan encoding fitur kategori, salah satu teknik yang umum digunakan adalah teknik **one-hot-encoding**. Library Sklearn menyediakan fungsi ini untuk mendapatkan fitur baru yang sesuai sehingga dapat mewakili variabel kategori. Dalam dataset ini kita memiliki 4 fitur kategori yaitu  `model`, `fuel_type`, `transmission`, dan `manufacturer`. Kita akan melakukan proses encoding ini dengan fitur `get_dummies`.
+Untuk melakukan encoding fitur kategori, digunakan teknik **one-hot-encoding**. Fungsi tersebut disediakan oleh library Sklearn. One-hot-encoding digunakan untuk mendapatkan fitur baru yang sesuai sehingga dapat mewakili variabel kategori. Dalam dataset ini terdapat 4 fitur kategori yaitu  `model`, `fuel_type`, `transmission`, dan `manufacturer`. Proses encoding akan dilakukan dengan menggunakan fitur `get_dummies`.
 
 ### 3.2 Reduksi Dimensi dengan PCA
 Teknik reduksi merupakan prosedut untuk mengurangi sejumlah fitur dengan tetap mempertahankan informasi pada data. Teknik reduksi yang paling populer adalah principle component analysis (PCA). Teknik ini digunakan untuk mereduksi dimensi, mengekstraksi fitur, dan mentransformasi data dari "n-dimensional space" ke dalam sistem berkoordinat baru dengan dimensi m, dimana m lebih kecil dari n.
 
-PCA ini bekerja menggunakan metode aljabar linier. Dimana ia mengasumsikan bahwa sekumpulan data pada arah dengan varians terbesar merupakan yang paling penting atau utama. PCA umumnya digunakan ketika variabel dalam data memiliki korelasi yang tinggi. Korelasi tinggi ini menunjukkan data yang berulang atau redundant. Oleh karena itu, PCA digunakan untuk mereduksi variabel asli menjadi sejumlah kecil variabel baru yang tidak berkorelasi linier. Komponen utama dapat menangkap sebagian besar varians dalam variabel asli. Sehingga PCA yang diterapkan pada data, hanya akan menggunakan komponen utama dan mengabaikan sisanya.
+PCA bekerja menggunakan metode aljabar linier. Dimana ia mengasumsikan bahwa sekumpulan data pada arah dengan varians terbesar merupakan yang paling penting atau utama. PCA umumnya digunakan ketika variabel dalam data memiliki korelasi yang tinggi. Korelasi tinggi ini menunjukkan data yang berulang atau redundant. Oleh karena itu, PCA digunakan untuk mereduksi variabel asli menjadi sejumlah kecil variabel baru yang tidak berkorelasi linier. Komponen utama dapat menangkap sebagian besar varians dalam variabel asli. Sehingga PCA yang diterapkan pada data, hanya akan menggunakan komponen utama dan mengabaikan sisanya.
 
-Seperti yang kita tahu ketika beberapa fitur memiliki korelasi yang tinggi terhadap price, berarti fitur tersebut memuat informasi yang sama. Contohnya Tahun Pembuatan dan Kilometer kendaraan yang memuat informasi terkait masa pakai kendaraan.
+Diketahui bahwa beberapa fitur memiliki korelasi yang tinggi terhadap `price`. Hal tersebut memiliki arti bahwa fitur tersebut memuat informasi yang sama. Contohnya Tahun Pembuatan dan Kilometer kendaraan yang memuat informasi terkait masa pakai kendaraan.
 
-Setelah melakukan PCA, akan didapatkan proporsi informasi dari keenam komponen. Dimana akan dalam dataset ini akan berfokus pada principle component yang pertama.
+Dari hasil proses PCA, akan didapatkan proporsi informasi dari keenam komponen `numerical_features`. Proyek ini hanya berfokus pada komponen utama atau pertama dari keenam komponen tersebut.
 
 ### 3.3 Train-Test-Split
 
-Proporsi pembagian data train dan test bisanya adalah 80:20. Tujuan dari adanya data test adalah untuk mengukur kinerja model pada data baru. Pada proyek ini kita akan melakukan proporsi pembagian sebesar 90:10 dengan menggunakan fungsi train_test_split dari sklearn.
+Proporsi pembagian data train dan test umumnya adalah 80:20. Tujuan dari adanya data test adalah untuk mengukur kinerja model pada data baru. Pada proyek ini, proporsi pembagian adalah 90:10 dengan menggunakan fungsi train_test_split dari sklearn. Proporsi tersebut dipilih dikarenakan dataset yang ada tidak memiliki entri dengan jumlah yang besar.
 
 ### 3.4 Standardisasi
-Standardisasi adalah teknik transformasi yang umum digunakan dalam tahap persiapan pemodelan. Untuk fitur numerik, kita tidak akan melakukan transformasi dengan one hot-encidng seperti pada fitur kategori. Kita akan menggunakan teknik StandarScaler dari library sklearn.
+Standardisasi adalah teknik transformasi yang umum digunakan dalam tahap persiapan pemodelan. Untuk fitur numerik, tidak akan dilakukan transformasi dengan one hot-encoding seperti pada fitur kategori. Untuk melakukan standardisasi ini, digunakan teknik StandarScaler dari library sklearn.
 
 StarndardScaler melakukan proses standardisasi dengan mengurangi mean kemudian membaginya dengan standar deviasi untuk menggeser distribusi. StandardScaler ini menghasilkan distribusi dengan standar deviasi sama dengan 1 dan mean sama dengan 0. Sekitar 68% dari nilai akan berada di antara -1 dan 1.
 
-Kita hanya akan menerapkan fitur standardisasi pada data latih saja untuk menghindari kebocoran informasi pada data uji. Barulah pada tahap evaluasi kita akan melakukan standardisasi pada data uji.
+Pada proyek ini hanya diterapkan fitur standardisasi pada data latih saja untuk menghindari kebocoran informasi pada data uji. Barulah pada tahap evaluasi akan dilakukan standardisasi pada data uji.
 
 
 
 ## 4. Modeling
-Dalam tahapan ini kita akan mengembangkan machine learning dengan tiga algoritma dan akan dilakukan evaluasi pada ketiganya untuk mengetahui algoritma mana yang dapat memberikan hasil prediksi terbaik. ALgoritma yang digunakan diantaranya:
+Dalam tahapan ini dikembangkan machine learning dengan tiga algoritma dan dilakukan evaluasi pada ketiganya untuk mengetahui algoritma mana yang dapat memberikan hasil prediksi terbaik. ALgoritma yang digunakan diantaranya:
 1. K-Nearest Neighbor
 2. Random Forest
 3. Boosting Algorithm
 
 ### 4.1 Algoritma K-Nearest Neighbor (KNN)
 
-Algoritma ini akan bekerja pada data baru dimana setiap data baru akan diberi nilai berdasarkan seberapa mirip titik tersebut dalam set pelatihan. KNN bekerja dengan membandingkan jarak satu sampel ke sampel pelatihan lain dengan memilih sejumlah k tetangga terdekat (dengan k adalah sebuah angka positif).
+Algoritma ini bekerja pada data baru dimana setiap data baru akan diberi nilai berdasarkan seberapa mirip titik tersebut dalam set pelatihan. KNN bekerja dengan membandingkan jarak satu sampel ke sampel pelatihan lain dengan memilih sejumlah k tetangga terdekat (dengan k adalah sebuah angka positif).
 
 Memilih nilai k yang lebih besar dapat membantu menghindari overfit, meskipun terkadang menyebabkan kehilangan kemampuan prediksi. Ketika memilih nilai k=1 maka hasilnya akan sangat kaku sedangkan nilai k yang besar hasil prediksi akan lebih halus.
 
 - k terlalu rendah = overfit, hasil prediksi varians nya tinggi
 - k terlalu tinggi = underfit, prediksi memiliki bias yang tinggi
 
-Untuk menentukan titik mana dalam data yang paling mirip dengan input baru, KNN menggunakan perhitungan ukuran jarak diman ametrik yang digunakan secara default pada library sklearn adalah Minkowski Distance [27] metrik lain yang sering dipakai adalah Euclidean dan Manhattan distance. Dalam proyek ini akan dipakai metric default di library sklearn untuk KNN yaitu Euclidean Distance.
+Untuk menentukan titik mana dalam data yang paling mirip dengan input baru, KNN menggunakan perhitungan ukuran jarak dimana metrik yang digunakan secara default pada library sklearn adalah Minkowski Distance [1], metrik lain yang sering dipakai adalah Euclidean dan Manhattan distance. Dalam proyek ini akan dipakai metric pada library sklearn untuk KNN yaitu Euclidean Distance.
 
 ### 4.2 Algoritma Random Forest
 
@@ -168,15 +198,18 @@ Untuk membuat model ensemble ada dua teknik pendekatan:
 1. Bagging atau Bootstrap Aggregating
 2. Boosting
 
-`Bagging atau Bootstrap aggregating` yaitu teknik yang melatih model dengan sampel random. Dalam teknik ini model dilatih dengan teknik proses sampling dengan penggantian. Sampel dengan nilai yang berbeda bersifat independen, artinya nilai suatu sampel tidak mempengaruhi sampel lainnya [28]. Akibatnya model yang dilatih akan berbeda antara satu dan lainnya.
+`Bagging atau Bootstrap aggregating` yaitu teknik yang melatih model dengan sampel random. Dalam teknik ini model dilatih dengan teknik proses sampling dengan penggantian. Sampel dengan nilai yang berbeda bersifat independen, artinya nilai suatu sampel tidak mempengaruhi sampel lainnya [2]. Akibatnya, model yang dilatih akan berbeda antara satu dan lainnya.
 
-Salah satu algoritma yang cocok dengan teknik bagging adalah decision tree. Misalnya, ada 200 model decision tree pada bag random forest kita, ini berarti bahwa keputusan (decision) yang dibuat oleh setiap pohon (model) akan sangat bervariasi. Pada kasus klasifikasi, prediksi akhir diambil dari prediksi terbanyak pada seluruh pohon. Sedangkan, pada kasus regresi, prediksi akhir adalah rata-rata prediksi seluruh pohon dalam model ensemble.Maka algoritma ini disebut random forest karena tersusun dari banyak algoritma decision tree yang pembagian data dan fiturnya dipilih secara acak.
+Salah satu algoritma yang cocok dengan teknik bagging adalah decision tree. Sebagai contoh, misalnya terdapat 200 model decision tree pada bag random forest, ini berarti bahwa keputusan (decision) yang dibuat oleh setiap pohon (model) akan sangat bervariasi. Pada kasus klasifikasi, prediksi akhir diambil dari prediksi terbanyak pada seluruh pohon. Sedangkan, pada kasus regresi, prediksi akhir adalah rata-rata prediksi seluruh pohon dalam model ensemble. Maka algoritma ini disebut random forest karena tersusun dari banyak algoritma decision tree yang pembagian data dan fiturnya dipilih secara acak.
 
-Untuk menggunakan algoritma diharuskan mengimpor `RandomForestRegressor` dari `sklearn.ensemble` yang memiliki nilai parameter yang perlu diatur diantaranya :
-- `n_estimator`: jumlah trees 
-- `max_depth`: panjang atau kedalaman pohon adalah ukuran seberapa banyak pohon dapat splitting untuk membagi setiap node ke dalam jumlah pengamatan yang diinginkan
-- `random_state`. digunakan untuk mengontrol random number generator yang digunakan
-- `n_jobs`: jumlah job yang digunakan secara paralel yaitu komponen untuk mengontrol thread atau proses yang berjalan secara paralel. Nilai -1 artinya semua proses berjalan secara paralel.
+Untuk menggunakan algoritma ini diharuskan mengimpor `RandomForestRegressor` dari `sklearn.ensemble` yang memiliki nilai parameter yang perlu diatur diantaranya :
+
+| Parameter      | Deskripsi                                                                                                                                                                        |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `n_estimator`  | jumlah trees                                                                                                                                                                     |
+| `max_depth`    | panjang atau kedalaman pohon adalah ukuran seberapa banyak pohon dapat splitting untuk membagi setiap node ke dalam jumlah pengamatan yang diinginkan                            |
+| `random_state` | digunakan untuk mengontrol random number generator yang digunakan                                                                                                                |
+| `n_jobs`       | jumlah job yang digunakan secara paralel yaitu komponen untuk mengontrol thread atau proses yang berjalan secara paralel. Nilai -1 artinya semua proses berjalan secara paralel. |
 
 ### 4.3 Boosting Algorithm
 
@@ -213,24 +246,47 @@ AdaBoost dan gradient boosting memiliki beberapa perbedaan, antara lain:
 - `Performance`: AdaBoost umumnya lebih cepat daripada gradient boosting.
 
 
-Pada proyek ini kita akan menggunakan metode adaptive boosting yaitu AdaBoost. Awalnya, semua kasus dalam data latih memiliki weight atau bobot yang sama. Pada setiap tahapan, model akan memeriksa apakah observasi yang dilakukan sudah benar? Bobot yang lebih tinggi kemudian diberikan pada model yang salah sehingga mereka akan dimasukkan ke dalam tahapan selanjutnya. Proses iteratif ini berlanjut sampai model mencapai akurasi yang diinginkan.
+Pada proyek ini digunakan metode adaptive boosting yaitu AdaBoost. Awalnya, semua kasus dalam data latih memiliki weight atau bobot yang sama. Pada setiap tahapan, model akan memeriksa apakah observasi yang dilakukan sudah benar? Bobot yang lebih tinggi kemudian diberikan pada model yang salah sehingga mereka akan dimasukkan ke dalam tahapan selanjutnya. Proses iteratif ini berlanjut sampai model mencapai akurasi yang diinginkan.
 
 ## 5. Evaluation
 Metrik yang digunakan dalam prediksi ini adalah MSE yang menghitung jumlah selisih kuadrat rata-rata nilai sebenarnya dengan nilai prediksi. Berikut merupakan formula dari MSE
 
-![link text](https://miro.medium.com/v2/resize:fit:1198/1*BtVajQNj29LkVySEWR_4ww.png
-)
+$$
+\text{MSE} = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2
+$$
 
-Sebelum melakukan perhitungan MSE, perlu dilakukan scaling pada fitur numerik pada data uji. Setelah model selesai kita latih dengan 3 algoritma, kita perlu melakukan proses scaling terhadap data uji. Hal tersebut dilakukan agar skala antara data latih dan data uji sama dan bisa kita lakukan evaluasi.
+
+dimana:
+
+* $n$ adalah jumlah titik data
+* $ y_i $ adalah nilai aktual dari titik data ke-i
+* $\hat{y}_i$ adalah nilai prediksi dari titik data ke-i
+
+Sebelum melakukan perhitungan MSE, perlu dilakukan scaling pada fitur numerik pada data uji. Setelah model selesai dilatih dengan 3 algoritma, perlu dilakukan proses scaling terhadap data uji. Hal tersebut dilakukan agar skala antara data latih dan data uji sama dan dapat dilakukan evaluasi.
 
 Evaluasi model dilakukan dengan menghitung Mean Squarred Error dari masing-masing algoritma pada data train dan test. Hasil perhitungan tersebut akan ditampilkan dalam bentuk bar chart untuk memudahkan proses evaluasi. Model yang dipilih merupakan model yang memberikan nilai error paling kecil pada data train dan test.
 
 Proses evaluasi dilanjutkan dengan membuat prediksi menggunakan beberapa entri data di kolom `price` dari dataset dan menampilkan hasil R2 Score pada masing-masing model. R2 menunjukkan seberapa dekat hasil prediksi dengan data sebenarnya.  Model yang memiliki R2 Score atau koefisien determinasi tertinggi merupakan model yang terbaik.
 
-## 6. Daftar Pustaka
-[27] Scikit-learn Documentation. Tersedia: tautan. Diakses pada: Juni 2021.
+**Hasil evaluasi terhadap prediksi yang dilakukan adalah sebagai berikut:**
+|      	|          	|              	| Hasil Prediksi 	|                   	|
+|------	|----------	|--------------	|----------------	|-------------------	|
+|      	| y_true   	| prediksi_KNN 	| prediksi_RF    	| prediksi_boosting 	|
+| 3267 	| 333000.0 	| 384700.0     	| 368522.6       	| 470922.6          	|
 
-[28] Parker, Mary. "Sampling with Replacement and Sampling without Replacement". Tersedia: tautan. Diakses pada Juni 2021. 
+**Hasil evaluasi R2 score pada masing-masing model adalah sebagai berikut:**
+|   	| Model    	| R2 Score 	|
+|---	|----------	|----------	|
+| 0 	| KNN      	| 0.797111 	|
+| 1 	| RF       	| 0.837687 	|
+| 2 	| Boosting 	| 0.566021 	|
+
+Berdasarkan hasil evaluasi masing-masing model tersebut, disimpulkan bahwa model terbaik untuk prediksi harga mobil tua adalah model Random Forest dengan akurasi **83.7%**
+
+## 6. Daftar Pustaka
+[1] Scikit-learn Documentation. Tersedia: [tautan](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html). Diakses pada: Oktober 2023.
+
+[2] Parker, Mary. "Sampling with Replacement and Sampling without Replacement". Tersedia: [tautan](https://web.ma.utexas.edu/users/parker/sampling/repl.htm). Diakses pada Oktober 2023. 
 
 
 
