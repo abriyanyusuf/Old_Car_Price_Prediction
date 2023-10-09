@@ -77,10 +77,23 @@ Data yang digunakan dalam proyek ini adalah dataset yang bersumber dari kaggle b
 
 Untuk memahami data, digunakan teknik Exploratory Data Analysis (EDA).Sebelum melakukan proses EDA, terlebih dahulu dilakukan proses berupa Data Loading dan Data Cleaning. 
 
-### 2.2 Data Loading
+
+
+
+## 3. Data Preparation
+Pada tahapan ini dilakukan proses transformasi pada data sehingga menjadi bentuk yang cocok untuk proses pemodelan. Terdapat 7 tahapan dalam Data Preparation diantaranya :
+1. Data Loading
+2. Data Cleaning
+3. Exploratory Data Analysis
+4. Encoding Fitur Kategori
+5. Reduksi dimensi dengan PCA
+6. Pembagian dataset dengan fungsi train_test_split dari library `sklearn`
+7. Standardisasi
+
+### 3.1 Data Loading
 Data loading dilakukan untuk mengunduh data dari kaggle dengan cara mengunggah kredensial akun kaggle berupa file kaggle.json ke dalam direktori proyek. Kemudian, dilakukan serangkaian proses untuk mengkonfigurasi kredensial kaggle yang telah diupload. Langkah selanjutnya adalah mengunduh dataset melalui perintah `!kaggle datasets download milanvaddoriya/old-car-price-prediction` dan dilanjutkan dengan melakukan unzip dataset yang telah didownload.
 
-### 2.3 Data Cleaning
+### 3.2 Data Cleaning
 Pada proses Data Cleaning dilakukan proses pembersihan data dengan menghilangkan beberapa atribut dalam tiap-tiap entri data. Detail dari proses pembersihan data adalah sebagai berikut :
 1. Melakukan dropping kolom `unnamed`.
 2. Melakukan splitting pada entri data di kolom `car_prices_in_rupee` dan memindahkan hasilnya pada kolom baru bernama `price` yang berisi angka dari setiap entri data dan kolom `multiply` yang berisi atribut dari setiap entri data (Lakh atau Crore).
@@ -95,12 +108,12 @@ Pada proses Data Cleaning dilakukan proses pembersihan data dengan menghilangkan
 11. Mengganti nama kolom `manufacture` menjadi `year` agar memudahkan dalam membaca data dan menghindari kesalahan.
 12. Memeriksa tipe data masing-masing fitur dan mengonversinya ke tipe data yang sesuai untuk proses EDA.
 
-### 2.4 Exploratory Data Analysis
+### 3.3 Exploratory Data Analysis
 Dalam tahapan ini, dilakukan analisis data yang sudah dibersihkan meliputi:
-#### 2.4.1. Deskripsi variabel
+#### 3.3.1. Deskripsi variabel
 Tahapan ini dilakukan untuk mengetahui informasi variabel dari dataset diantaranya jumlah kolom, jumlah data, nama kolom, jumlah data per kolom, dan tipe data.
 
-#### 2.4.2. Deskripsi Statistik
+#### 3.3.2. Deskripsi Statistik
 Tahapan ini dilakukan untuk mengetahui deskripsi statistik dari dataset. Dimana pada tahapan ini akan didapatkan deskripsi statistik meliputi :
 1. Count : Jumlah sampel data
 2. Mean : Nilai rerata
@@ -113,10 +126,10 @@ Tahapan ini dilakukan untuk mengetahui deskripsi statistik dari dataset. Dimana 
 
 Berdasarkan deskripsi statistik dari dataset, dapat diketahui apakah terdapat *missing value* atau tidak dengan melihat apakah terdapat nilai minimum yang bernilai nol. 
 
-#### 2.4.3. Menangani Missing Value
+#### 3.3.3. Menangani Missing Value
 Dalam tahapan ini, dilakukan dropping pada setiap data yang memiliki *missing value*.
 
-#### 2.4.4. Menangani Outliers
+#### 3.3.4. Menangani Outliers
 Dalam tahapan ini dilakukan pengecekkan *outliers* menggunakan teknik visualisasi data dengan boxplot. Apabila terdapat outliers, maka akan ditangani dengan menggunakan teknik Inter Quartile Range (IQR).Seltman dalam “Experimental Design and Analysis” [1] menyatakan bahwa outliers yang diidentifikasi oleh boxplot (disebut juga “boxplot outliers”) didefinisikan sebagai data yang nilainya 1.5 QR di atas Q3 atau 1.5 QR di bawah Q1.
 
 Berdasarkan teori tersebut, dapat dibuat batas atas dan batas bawah dari data:
@@ -130,41 +143,113 @@ $$
 $$
 
 
-#### 2.4.5. Melakukan Univariate Analysis
+#### 3.3.5. Melakukan Univariate Analysis
 Univariate Analysis dalam Exploratory Data Analysis (EDA) merujuk pada jenis analisis yang dilakukan terhadap satu variabel atau fitur tunggal dalam dataset, tanpa mempertimbangkan hubungannya dengan variabel lain. Dalam tahapan ini dilakukan visualisasi menggunakan histogram dari masing-masing fitur yaitu `categorical_features` dan `numerical_features`.
 
-#### 2.4.6. Melakukan Multivariate Analysis
+##### a. Categorical_Features
+Categorical features terdiri dari 4 fitur yaitu `model`, `fuel_type`, `transmission`, dan `manufacturer`. Analisis pada masing-masing fitur tersebut menghasilkan hasil sebagai berikut :
+###### 1) Fitur Model
+![Univariate_Model](https://drive.google.com/uc?export=view&id=12kE80F1k3pWfhqhL4jS5TvUZpxdb1zzK)
+
+Berdasarkan histogram tersebut, dari 180 kategori pada fitur model, kendaraan dengan model `Swift` menempati urutan terbanyak dengan persentase 8.2%
+
+###### 2) Fitur Fuel_type
+![Univariate_fueltype](https://drive.google.com/uc?export=view&id=1n8rwQKBHkb5ZxovUYAP8RnlxXJqVyx80)
+
+Berdasarkan histogram tersebut, dari 5 kategori pada fitur fuel_type, kendaraan dengan fuel_type `Petrol` menempati urutan terbanyak dengan persentase 58.9%
+
+###### 3) Fitur transmission
+![Univariate_transmission](https://drive.google.com/uc?export=view&id=1LgnQBVu4_Vi1Qp8xtaVBVjeyFXWYsTxe)
+
+Berdasarkan histogram tersebut, dari 2 kategori pada fitur transmission, kendaraan dengan transmission `Manual` menempati urutan terbanyak dengan persentase 80.5%
+
+###### 4) Fitur manufacturer
+![Univariate_manufacturer1](https://drive.google.com/uc?export=view&id=1iQjpJfb_Xd3ybiAC7y8uUYbrIby7EQeJ)
+
+![Univariate_manufacturer2](https://drive.google.com/uc?export=view&id=1DTessabG_OV2LfYC4qjtFYn59dN-xEYx)
+
+Berdasarkan histogram tersebut, dari 27 kategori pada fitur manufacturer, kendaraan dengan manufacturer `Maruti` menempati urutan terbanyak dengan persentase 28.5%
+
+##### b. Numerical_Features
+Numerical features terdiri dari 6 fitur yaitu `kms_driven`, `ownership`, `year`, `engine`, `Seats` dan `price`. 
+
+![Univariate_Numerical](https://drive.google.com/uc?export=view&id=1zIjFnqMGy2YmABePhIO4LZ5P9w-f7JC9)
+
+
+Berdasarkan pengamatan histogram di atas khususnya `price` yang merupakan fitur target (label) pada dataset proyek ini. Dari histogram `price`, dapat diperoleh beberapa informasi diantaranya:
+- Peningkatan harga kendaraan sebanding dengan penurunan jumlah sampel. Hal ini dapat dilihat jelas dari histogram `price` yang grafiknya mengalami penurunan seiring dengan semakin banyaknya jumlah sampel (sumbu x).
+- Rentang harga kendaraan cukup tinggi dari skala ratusan ribu rupe hingga lebih dari 2 juta rupee.
+- Setengan harga kendaraan bernilai di bawah 1 juta rupee
+- Distibusi `price` miring ke kanan (right-skewed) yang akan berimplikasi pada model
+
+
+#### 3.3.6. Melakukan Multivariate Analysis
 Multivariate Analysis dalam Exploratory Data Analysis (EDA) adalah jenis analisis yang dilakukan terhadap dua atau lebih variabel dalam dataset, dengan tujuan untuk memahami hubungan, interaksi, dan pola kompleks antara variabel-variabel tersebut. 
 
 Pada `categorical_features`, analisis dilakukan dengan membuat grafik rata-rata `price` relatif terhadap masing-masing fitur kategori.
 
 Kemudian, pada `numerical_features`, analisis dilakukan dengan menggunakan fungsi `pairplot()` untuk melakukan observasi secara visual dan dilanjutkan menggunakan fungsi `corr()` untuk mengetahui skor korelasinya.
 
+##### a. Categorical_Features
+Categorical features terdiri dari 4 fitur yaitu `model`, `fuel_type`, `transmission`, dan `manufacturer`. Grafik di bawah ini menampilkan rerata `price` terhadap masing-masing fitur untuk mengetahui pengaruh categorical_features terhadap `price`.
 
-## 3. Data Preparation
-Pada tahapan ini dilakukan proses transformasi pada data sehingga menjadi bentuk yang cocok untuk proses pemodelan. Terdapat 4 tahapan dalam Data Preparation diantaranya :
-1. Encoding Fitur Kategori
-2. Reduksi dimensi dengan PCA
-3. Pembagian dataset dengan fungsi train_test_split dari library `sklearn`
-4. Standardisasi
+![Multivariate_Categorical_transmission](https://drive.google.com/uc?export=view&id=1hWLweTGyWeaY3qnk-e0QUyc15fwZRspY)
+![Multivariate_Categorical_model](https://drive.google.com/uc?export=view&id=1su0XYZVbU1a9auaCl7XTDAgH8KknuxQm)
+![Multivariate_Categorical_manufacturer](https://drive.google.com/uc?export=view&id=1V7RRa27Cy_hzcKHD0fUOwV5ol5EufxSe)
+![Multivariate_Categorical_fueltype](https://drive.google.com/uc?export=view&id=1V9u7fnuy_luBbFT9dlOImCYS-PEKsuQX)
 
-### 3.1 Encoding Fitur Kategori
+
+Berdasarkan grafik di atas didapatkan informasi sebagai berikut:
+1. Pada fitur `model` rata-ratanya cenderung berbeda-beda. Sehingga pengaruh fitur ini terhadap harga cenderung rendah.
+2. Pada fitur `fuel_type` kendaraan yang menggunakan bahan-bakar listrik cenderung memiliki harga yang relatif lebih tinggi dibandingkan kendaraan lainnya.
+3. Pada fitur `transmission` kendaraan yang menggunakan transmisi automatic memiliki harga yang lebih tinggi dibandingkan kendaraan bertipe manual.
+4. Pada fitur `manufacturer` rata-ratanya cenderung berbeda-beda sehingga pengaruh fitur ini terhadap harga cenderung rendah
+5. Kesimpulan akhir : fitur kategori memiliki pengaruh yang rendah terhadap `price`.
+
+##### b. Numerical_Features
+Numerical features terdiri dari 6 fitur yaitu `kms_driven`, `ownership`, `year`, `engine`, `Seats` dan `price`. Fungsi `pairplot()` yang digunakan menghasilkan keluaran sebagai berikut:
+
+![Multivariate_numerical](https://drive.google.com/uc?export=view&id=1zBj8ouZTzlkVkJRAs5r0dFbfkQ_k_UIp)
+
+Dari keluaran `pairplot()` tersebut dapat dijadikan sebagai dasar observasi awal untuk menentukan fitur numeris mana yang memiliki korelasi dengan fitur `price`. 
+
+Analisis dilanjutkan untuk mengetahui nilai korelasi masing-masing fitur terhadap `price`. Fungsi `corr()` yang digunakan akan memberikan hasil sebagai berikut,
+
+![Multivariate_numerical_cormax](https://drive.google.com/uc?export=view&id=1Pkd6sxLYSJaoSKeOnZ-WxNGQBj6kAYXN)
+
+Berdasarkan hasil skor korelasi tersebut, dapat disimpulkan bahwa fitur yang paling berpengaruh terhadap `price` masing-masing dimulai dari yang tertinggi yaitu :
+1. fitur `year` dengan skor korelasi 0.53
+2. fitur `engine` dengan skor korelasi 0.11
+3. fitur `ownership` dengan skor korelasi -0.19
+4. fitur `kms_driven` dengan skor korelasi sebesar -0.26.
+
+Skor korelasi yang didapatkan bernilai positif dan negatif. Korelasi Positif (nilai mendekati 1) artinya ketika satu variabel meningkat, variabel lainnya cenderung meningkat juga. Dalam konteks ini, skor korelasi positif menunjukkan bahwa ada hubungan positif antara dua variabel tersebut. Contohnya, skor korelasi positif antara tahun pembuatan mobil `year` dan harga `price` menunjukkan bahwa semakin tinggi tahun pembuatan mobil, semakin tinggi juga harga mobilnya. 
+
+Sedangkan korelasi negatif (nilai mendekati -1) artinya ketika satu variabel meningkat, variabel lainnya cenderung menurun. Dalam konteks ini, skor korelasi negatif menunjukkan bahwa ada hubungan negatif antara dua variabel tersebut. Misalnya, skor korelasi negatif antara jumlah kilometer yang sudah ditempuh `kms_driven` dan harga `price` menunjukkan bahwa semakin banyak kilometer yang sudah ditempuh oleh mobil, semakin rendah harga mobilnya.
+
+
+
+### 3.4 Encoding Fitur Kategori
 Untuk melakukan encoding fitur kategori, digunakan teknik **one-hot-encoding**. Fungsi tersebut disediakan oleh library Sklearn. One-hot-encoding digunakan untuk mendapatkan fitur baru yang sesuai sehingga dapat mewakili variabel kategori. Dalam dataset ini terdapat 4 fitur kategori yaitu  `model`, `fuel_type`, `transmission`, dan `manufacturer`. Proses encoding akan dilakukan dengan menggunakan fitur `get_dummies`.
 
-### 3.2 Reduksi Dimensi dengan PCA
+### 3.5 Reduksi Dimensi dengan PCA
 Teknik reduksi merupakan prosedut untuk mengurangi sejumlah fitur dengan tetap mempertahankan informasi pada data. Teknik reduksi yang paling populer adalah principle component analysis (PCA). Teknik ini digunakan untuk mereduksi dimensi, mengekstraksi fitur, dan mentransformasi data dari "n-dimensional space" ke dalam sistem berkoordinat baru dengan dimensi m, dimana m lebih kecil dari n.
 
 PCA bekerja menggunakan metode aljabar linier. Dimana ia mengasumsikan bahwa sekumpulan data pada arah dengan varians terbesar merupakan yang paling penting atau utama. PCA umumnya digunakan ketika variabel dalam data memiliki korelasi yang tinggi. Korelasi tinggi ini menunjukkan data yang berulang atau redundant. Oleh karena itu, PCA digunakan untuk mereduksi variabel asli menjadi sejumlah kecil variabel baru yang tidak berkorelasi linier. Komponen utama dapat menangkap sebagian besar varians dalam variabel asli. Sehingga PCA yang diterapkan pada data, hanya akan menggunakan komponen utama dan mengabaikan sisanya.
 
 Diketahui bahwa beberapa fitur memiliki korelasi yang tinggi terhadap `price`. Hal tersebut memiliki arti bahwa fitur tersebut memuat informasi yang sama. Contohnya Tahun Pembuatan dan Kilometer kendaraan yang memuat informasi terkait masa pakai kendaraan.
 
-Dari hasil proses PCA, akan didapatkan proporsi informasi dari keenam komponen `numerical_features`. Proyek ini hanya berfokus pada komponen utama atau pertama dari keenam komponen tersebut.
+Dari hasil proses PCA, akan didapatkan proporsi informasi dari keenam komponen `numerical_features`. Reduksi dimensi dengan PCA menghasilkan hasil sebagai berikut:
 
-### 3.3 Train-Test-Split
+```array([1., 0., 0., 0.])```
+
+Dapat disimpulkan bahwa 100% informasi pada keempat fitur numerik terdapat pada *principle component* pertama. Sehingga tidak perlu dilakukan reduksi dimensi. 
+
+### 3.6 Train-Test-Split
 
 Proporsi pembagian data train dan test umumnya adalah 80:20. Tujuan dari adanya data test adalah untuk mengukur kinerja model pada data baru. Pada proyek ini, proporsi pembagian adalah 90:10 dengan menggunakan fungsi train_test_split dari sklearn. Proporsi tersebut dipilih dikarenakan dataset yang ada tidak memiliki entri dengan jumlah yang besar.
 
-### 3.4 Standardisasi
+### 3.7 Standardisasi
 Standardisasi adalah teknik transformasi yang umum digunakan dalam tahap persiapan pemodelan. Untuk fitur numerik, tidak akan dilakukan transformasi dengan one hot-encoding seperti pada fitur kategori. Untuk melakukan standardisasi ini, digunakan teknik StandarScaler dari library sklearn.
 
 StarndardScaler melakukan proses standardisasi dengan mengurangi mean kemudian membaginya dengan standar deviasi untuk menggeser distribusi. StandardScaler ini menghasilkan distribusi dengan standar deviasi sama dengan 1 dan mean sama dengan 0. Sekitar 68% dari nilai akan berada di antara -1 dan 1.
@@ -188,7 +273,21 @@ Memilih nilai k yang lebih besar dapat membantu menghindari overfit, meskipun te
 - k terlalu rendah = overfit, hasil prediksi varians nya tinggi
 - k terlalu tinggi = underfit, prediksi memiliki bias yang tinggi
 
-Untuk menentukan titik mana dalam data yang paling mirip dengan input baru, KNN menggunakan perhitungan ukuran jarak dimana metrik yang digunakan secara default pada library sklearn adalah Minkowski Distance [1], metrik lain yang sering dipakai adalah Euclidean dan Manhattan distance. Dalam proyek ini akan dipakai metric pada library sklearn untuk KNN yaitu Euclidean Distance.
+Untuk menentukan titik mana dalam data yang paling mirip dengan input baru, KNN menggunakan perhitungan ukuran jarak dimana metrik yang digunakan secara default pada library sklearn adalah Minkowski Distance [1], metrik lain yang sering dipakai adalah Euclidean dan Manhattan distance. 
+
+Kode yang digunakan untuk menggunakan algoritma KNN pada proyek ini adalah sebagai berikut
+
+```
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.metrics import mean_squared_error
+
+knn = KNeighborsRegressor(n_neighbors=10)
+knn.fit(X_train, y_train)
+
+models.loc['train_mse','knn'] = mean_squared_error(y_pred = knn.predict(X_train), y_true=y_train)
+```
+
+Dalam proyek ini akan dipakai metric pada library sklearn untuk KNN yaitu Euclidean Distance dengan k=10.
 
 ### 4.2 Algoritma Random Forest
 
@@ -210,6 +309,27 @@ Untuk menggunakan algoritma ini diharuskan mengimpor `RandomForestRegressor` dar
 | `max_depth`    | panjang atau kedalaman pohon adalah ukuran seberapa banyak pohon dapat splitting untuk membagi setiap node ke dalam jumlah pengamatan yang diinginkan                            |
 | `random_state` | digunakan untuk mengontrol random number generator yang digunakan                                                                                                                |
 | `n_jobs`       | jumlah job yang digunakan secara paralel yaitu komponen untuk mengontrol thread atau proses yang berjalan secara paralel. Nilai -1 artinya semua proses berjalan secara paralel. |
+
+Kode yang digunakan untuk mengaplikasikan Algoritma Random Forest adalah sebagai berikut:
+
+```
+# Impor library yang dibutuhkan
+from sklearn.ensemble import RandomForestRegressor
+
+# buat model prediksi
+RF = RandomForestRegressor(n_estimators=50, max_depth=16, random_state=55, n_jobs=-1)
+RF.fit(X_train, y_train)
+
+models.loc['train_mse','RandomForest'] = mean_squared_error(y_pred=RF.predict(X_train), y_true=y_train)
+```
+
+Kode di atas akan mengimpor **RandomForestRegressor** library ensemble dari sklearn, dan MSE sebagai metrik untuk evaluasi performa model. Berikut merupakan beberapa nilai parameter dari RandomForestRegressor
+- `n_estimator = 50`
+- `max_depth = 16`
+- `random_state = 55`
+- `n_jobs = 1`
+
+
 
 ### 4.3 Boosting Algorithm
 
@@ -247,6 +367,19 @@ AdaBoost dan gradient boosting memiliki beberapa perbedaan, antara lain:
 
 
 Pada proyek ini digunakan metode adaptive boosting yaitu AdaBoost. Awalnya, semua kasus dalam data latih memiliki weight atau bobot yang sama. Pada setiap tahapan, model akan memeriksa apakah observasi yang dilakukan sudah benar? Bobot yang lebih tinggi kemudian diberikan pada model yang salah sehingga mereka akan dimasukkan ke dalam tahapan selanjutnya. Proses iteratif ini berlanjut sampai model mencapai akurasi yang diinginkan.
+
+Kode yang digunakan untuk mengaplikasikan AdaBoost adalah sebagai berikut:
+```
+from sklearn.ensemble import AdaBoostRegressor
+
+boosting = AdaBoostRegressor(learning_rate=0.05, random_state=55)
+boosting.fit(X_train, y_train)
+models.loc['train_mse','Boosting'] = mean_squared_error(y_pred=boosting.predict(X_train), y_true=y_train)
+```
+
+Pada kode tersebut, learning_rate merupakan bobot yang diterapkan pada setiap regressor masing-masing proses iterasi boosting sedangkan random_state digunakan untuk mengontrol random_number yang digunakan. Pada protek ini parameter AdaBoost diatur sebagai berikut:
+- `learning_rate=0.05`
+- `random_state=55`
 
 ## 5. Evaluation
 Metrik yang digunakan dalam prediksi ini adalah MSE yang menghitung jumlah selisih kuadrat rata-rata nilai sebenarnya dengan nilai prediksi. Berikut merupakan formula dari MSE
